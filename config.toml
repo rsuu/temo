@@ -1,0 +1,9 @@
+[base]
+config_path = "./config.toml"
+cache_path = "./cache.toml"
+
+author = "self"
+config_create_at = "2022-05-11T03:52:47.544854705Z"
+
+[misc]
+db_path = "./temo.db"
