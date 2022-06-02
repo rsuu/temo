@@ -87,4 +87,10 @@ te '(p: )'
 te gc
     # clear drop task
 
+
+te --sync server
+    #. server
+
+te --sync daemon
+    #. daemon
 ```
