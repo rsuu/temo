@@ -1,23 +1,42 @@
+use std::io::Error;
+
+use signal_hook::{consts::signal::*, iterator::Signals};
+
 use std::{
-    io::Error,
+    process::{exit, Command},
+    thread,
+    thread::sleep,
+    time::Duration,
 };
 
-use fork::{daemon, Fork};
-use signal_hook::{
-    consts::signal::*,
-    iterator::Signals,
+use nix::{
+    sys::wait::waitpid,
+    unistd::{fork, ForkResult},
 };
-
-use std::process::Command;
-use std::thread;
-
 
 pub fn run_daemon() {
-    if let Ok(Fork::Child) = daemon(false, false) {
-        Command::new("echo")
-            .arg("1")
-            .spawn()
-            .expect("Child process failed to start.");
+    unsafe {
+        match fork().expect("Failed to fork process") {
+            ForkResult::Parent { child } => {
+                println!("Try to kill me to check if the target process will be killed");
+
+                // Do not forget to wait for the fork in order to prevent it from becoming a zombie!!!
+                waitpid(Some(child), None).unwrap();
+
+                // You have 120 seconds to kill the process :)
+                sleep(Duration::from_secs(2));
+            }
+
+            ForkResult::Child => {
+                // replace with your executable
+                Command::new("/tmp/cargo/target/release/temo")
+                    .arg("--sync")
+                    .arg("s")
+                    .spawn()
+                    .expect("failed to spawn the target process");
+                exit(0);
+            }
+        }
     }
 }
 

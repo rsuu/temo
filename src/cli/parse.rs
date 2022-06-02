@@ -8,10 +8,11 @@ use crate::{
         config, db,
         task::{self, History},
     },
-    sync::{server},
+    sync,
+    sync::server,
 };
 use lexopt::prelude::*;
-use rusqlite::{Connection};
+use rusqlite::Connection;
 use std::str::FromStr;
 use uuid::Uuid;
 
@@ -40,7 +41,7 @@ pub async fn parse_args(config: &config::Config) -> Result<(), lexopt::Error> {
                     }
                     "c" | "client" => {}
                     "d" | "daemon" => {
-                        //daemon::run_daemon().await;
+                        sync::daemon::run_daemon();
                     }
                     _ => {
                         safe_exit_with("");
@@ -201,7 +202,7 @@ pub fn get_task(conn: &Connection, v: &[usize]) -> rusqlite::Result<Vec<task::Ta
 
             history     ,
             is_history
-            FROM Task
+        FROM Task
             WHERE id=:id;",
     )?;
 

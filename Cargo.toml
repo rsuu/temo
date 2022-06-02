@@ -33,4 +33,4 @@ tabled = { version = "0.7.0", features = ["color"] }
 # daemon
 # TODO
 signal-hook = "0.3.14"
-fork = "0.1.19"
+nix="0.24"
