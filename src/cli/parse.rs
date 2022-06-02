@@ -23,8 +23,8 @@ pub async fn parse_args(config: &config::Config) -> Result<(), lexopt::Error> {
     //println!("{:?}", conn);
 
     let mut db = db::Db { conn };
-    let _ = db.new_table();
-    let _ = db.dbself_new_table();
+    db.new_table();
+    db.dbself_new_table();
 
     while let Some(arg) = parser.next()? {
         match arg {
@@ -91,8 +91,8 @@ pub async fn parse_args(config: &config::Config) -> Result<(), lexopt::Error> {
                 } else {
                 }
 
-                let _ = db.dbself_set_last(task.id);
-                let _ = db.insert(&task);
+                db.dbself_set_last(task.id);
+                db.insert(&task);
                 //println!("{:#?}", task);
 
                 task.cat();
